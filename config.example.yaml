@@ -1,0 +1,45 @@
+# ===========================================================================
+# config.example.yaml  ->  COPIA este archivo como  config.yaml  y edítalo.
+#
+#   cp config.example.yaml config.yaml
+#
+# config.yaml NO se sube a internet (está en .gitignore) porque lleva tus datos.
+# ===========================================================================
+
+# --- Tasas de cambio ---
+# Si no hay internet o quieres fijar valores, ponlos aquí. Si los dejas en null,
+# el programa los baja gratis de internet automáticamente.
+fx:
+  USD_COP: null   # ej. 4000
+  JPY_COP: null   # ej. 27
+
+# --- Costo de importación (casillero + impuestos) ---
+# Estos valores cambian con el tiempo; ajústalos a tu casillero y a la norma vigente.
+importacion:
+  # Tarifa del casillero por KILO (en USD). Mira la tarifa de tu casillero (Miami).
+  casillero_usd_por_kg: 12.0
+  # Costo fijo de manejo por paquete (USD).
+  manejo_usd: 5.0
+  # IVA Colombia (proporción, 0.19 = 19%).
+  iva: 0.19
+  # Arancel promedio (proporción). Depende del producto; 0.0 si no aplica.
+  arancel: 0.0
+  # Umbral "de minimis": compras por debajo de este valor (USD) pueden entrar
+  # sin algunos impuestos (bajo el TLC con EE.UU.). Pon 0 para ignorarlo.
+  de_minimis_usd: 200.0
+
+# --- Alertas por Telegram (recomendado, gratis) ---
+# Cómo obtener esto está explicado en el README.md
+telegram:
+  habilitado: false
+  bot_token: "PEGA_AQUI_TU_TOKEN"
+  chat_id: "PEGA_AQUI_TU_CHAT_ID"
+
+# --- Alertas por correo (opcional) ---
+correo:
+  habilitado: false
+  smtp_host: "smtp.gmail.com"
+  smtp_port: 587
+  usuario: "tucorreo@gmail.com"
+  password: "CONTRASEÑA_DE_APLICACION"   # NO tu clave normal; una "app password"
+  destino: "tucorreo@gmail.com"

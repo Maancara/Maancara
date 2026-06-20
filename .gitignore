@@ -1,0 +1,10 @@
+# Datos privados: NO subir a internet
+config.yaml
+precios.json
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env

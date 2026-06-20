@@ -1,0 +1,40 @@
+# ===========================================================================
+# watchlist.yaml  ->  TU LISTA DE DESEOS
+#
+# Aquí pones los productos que quieres vigilar. Hay 2 tipos:
+#
+#  1) Tiendas de COLOMBIA (Éxito, Alkosto, Olímpica, Falabella...):
+#     pega la URL de la página del producto. El programa lee el precio solo.
+#
+#  2) AMAZON US / JAPÓN:
+#     Amazon bloquea robots, así que (gratis y estable) usas Keepa o
+#     CamelCamelCamel para vigilarlo (ver README). Aquí solo pegas el precio
+#     actual a mano en "precio_manual" para compararlo. Actualízalo cuando
+#     Keepa/CamelCamelCamel te avise de un cambio.
+# ===========================================================================
+
+productos:
+
+  - id: ejemplo-tv-exito
+    nombre: "TV 55 pulgadas (ejemplo)"
+    mercado: colombia
+    url: "https://www.exito.com/pega-aqui-la-url-del-producto"
+    # Te avisa cuando el precio total puesto en Colombia baje de esto (COP):
+    umbral_cop: 1500000
+    peso_kg: 0          # 0 = compra local, sin casillero
+
+  - id: ejemplo-audifonos-amazon-us
+    nombre: "Audífonos (ejemplo, Amazon US)"
+    mercado: amazon_us
+    asin: "B0XXXXXXXX"
+    precio_manual: 79.99      # precio actual en USD (lo actualizas tú)
+    umbral_cop: 400000
+    peso_kg: 0.5
+
+  - id: ejemplo-figura-amazon-jp
+    nombre: "Figura coleccionable (ejemplo, Amazon Japón)"
+    mercado: amazon_jp
+    asin: "B0YYYYYYYY"
+    precio_manual: 6500       # precio actual en JPY (lo actualizas tú)
+    umbral_cop: 250000
+    peso_kg: 0.8
