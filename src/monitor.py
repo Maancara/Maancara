@@ -106,8 +106,9 @@ def revisar(solo_ver: bool = False) -> int:
 
         # ¿Alertamos? Cuando está por debajo del umbral Y bajó respecto a la
         # última vez (o es la primera vez que lo vemos por debajo).
-        bajo_umbral = umbral and d.total_cop <= umbral
-        bajo_antes = ultimo is not None and ultimo <= umbral
+        # Si el producto no tiene umbral, no hay nada que comparar.
+        bajo_umbral = umbral is not None and d.total_cop <= umbral
+        bajo_antes = umbral is not None and ultimo is not None and ultimo <= umbral
         if bajo_umbral and not bajo_antes:
             alertas += 1
             msg = (

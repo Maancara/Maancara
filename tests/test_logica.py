@@ -8,6 +8,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
+from src import storage  # noqa: E402
 from src.landed_cost import calcular  # noqa: E402
 from src.stores.colombia import _a_numero, extraer_precio_de_html  # noqa: E402
 
@@ -114,6 +115,62 @@ def test_amazon_japon():
 def test_falta_tasa():
     d = calcular(50, "USD", 1.0, CONFIG, {"USD_COP": None, "JPY_COP": None})
     assert d is None
+
+
+# --------------------------------------------------------------------------- #
+# Memoria de precios (manejo del archivo precios.json)
+# --------------------------------------------------------------------------- #
+def test_storage_registrar_y_previo():
+    # Primera vez: no hay registro previo.
+    db = {}
+    previo = storage.registrar(db, "p1", 100000.0)
+    assert previo == {}
+    assert db["p1"]["ultimo_cop"] == 100000.0
+    assert len(db["p1"]["historial"]) == 1
+
+    # Segunda vez: el previo conserva el precio anterior (no se contamina) y el
+    # historial crece.
+    previo = storage.registrar(db, "p1", 95000.0)
+    assert previo["ultimo_cop"] == 100000.0
+    assert db["p1"]["ultimo_cop"] == 95000.0
+    assert len(db["p1"]["historial"]) == 2
+
+
+def test_storage_historial_se_recorta_a_50():
+    db = {}
+    for i in range(60):
+        storage.registrar(db, "p1", float(i))
+    assert len(db["p1"]["historial"]) == 50
+    # Conserva los más recientes.
+    assert db["p1"]["historial"][-1]["total_cop"] == 59.0
+
+
+def test_storage_round_trip(tmp_path=None):
+    import json
+    import tempfile
+
+    carpeta = tempfile.mkdtemp()
+    archivo = os.path.join(carpeta, "precios.json")
+    original = storage._ARCHIVO
+    storage._ARCHIVO = archivo
+    try:
+        # Archivo inexistente -> diccionario vacío.
+        assert storage.cargar() == {}
+        # Guardar y volver a leer.
+        db = {"p1": {"ultimo_cop": 123.0, "historial": []}}
+        storage.guardar(db)
+        assert storage.cargar() == db
+        # Archivo corrupto -> no rompe, devuelve {}.
+        with open(archivo, "w", encoding="utf-8") as f:
+            f.write("{ esto no es json valido ")
+        assert storage.cargar() == {}
+        # Verifica que el guardado dejó JSON válido (no temporales sueltos).
+        storage.guardar(db)
+        with open(archivo, encoding="utf-8") as f:
+            assert json.load(f) == db
+        assert [n for n in os.listdir(carpeta) if n.startswith(".precios-")] == []
+    finally:
+        storage._ARCHIVO = original
 
 
 if __name__ == "__main__":
